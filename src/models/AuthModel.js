@@ -1,6 +1,6 @@
 export class AuthModel {
     constructor(username, password) {
-        this.username = username
+        this.nickname = username
         this.password = password
     }
 }

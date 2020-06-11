@@ -1,14 +1,15 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import './App.css'
 import List from '@material-ui/core/List'
-import {makeStyles} from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
-import {getEvents} from './classes/MockRestApi'
+import { getEvents } from './classes/MockRestApi'
 import Button from '@material-ui/core/Button'
-import {LoginDialog} from './presentation/auth/LoginDialog'
+import { LoginDialog } from './presentation/auth/LoginDialog'
 import EventItem from './presentation/events/EventItem'
+import Cookies from 'universal-cookie'
 
 const EventList = () => {
     const [events, setEvents] = useState()
@@ -75,8 +76,19 @@ const EventList = () => {
     }))
 
     const styles = useStyles()
-    const toggleOpen = () => setOpen(prevState => !prevState)
+    const toggleOpen = () => setOpen((prevState) => !prevState)
+    let profileClick = toggleOpen
+    const openProfile = () => {}
 
+    const [buttonName, setButtonName] = useState('Войти')
+
+    const cookies = new Cookies()
+    if (cookies.get('authToken') !== undefined) {
+        profileClick = openProfile
+        //todo set buttonName
+
+        // setButtonName('Профиль')
+    }
     return (
         <div className="App">
             <Box className={styles.pageTitleContainer}>
@@ -89,23 +101,34 @@ const EventList = () => {
                     <Button>Лента</Button>
                     <Button>Мероприятия</Button>
                     <Button>Горячее</Button>
-                    <Button onClick={() => toggleOpen()}>Профиль</Button>
+                    <Button variant="outlined" onClick={() => toggleOpen()}>
+                        {' '}
+                        {buttonName}{' '}
+                    </Button>
                 </Box>
                 <Box>
                     {events ? (
                         <List className={styles.eventList}>
                             {events.map((event) => (
-                                <EventItem event={event}/>
+                                <EventItem event={event} />
                             ))}
                         </List>
                     ) : (
                         <Box className={styles.loader}>
-                            <CircularProgress/>
+                            <CircularProgress />
                         </Box>
                     )}
                 </Box>
             </Box>
-            <LoginDialog open={open} toggleOpen={toggleOpen}/>
+            <LoginDialog
+                open={open}
+                isAuthSucceeded={(isSucceeded) => {
+                    if (isSucceeded) {
+                        setButtonName('Профиль')
+                    }
+                }}
+                toggleOpen={profileClick}
+            />
         </div>
     )
 }

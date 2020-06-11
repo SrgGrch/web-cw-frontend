@@ -8,7 +8,7 @@ export const getEvents = async () => {
 }
 
 export const login = async (username, password) => {
-    const res = await ApiClient.post('Events/GetAll', new AuthModel(username, password))
+    const res = await ApiClient.post('Account/Login', new AuthModel(username, password))
     console.log(res)
     return res.data
 }

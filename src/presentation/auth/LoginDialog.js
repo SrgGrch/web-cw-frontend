@@ -6,11 +6,14 @@ import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import Box from '@material-ui/core/Box'
+import { login } from '../../classes/RestApi'
+import Cookies from 'universal-cookie'
 
 export const LoginDialog = (props) => {
-    const { onClose, selectedValue, open, toggleOpen } = props
+    const { onClose, isAuthSucceeded, open, toggleOpen } = props
 
-    const [password, setPassword, username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const [username, setUsername] = useState('')
 
     const useStyles = makeStyles((theme) => ({
         dialog: {
@@ -34,8 +37,13 @@ export const LoginDialog = (props) => {
     const styles = useStyles()
 
     const loginUser = () => {
-        console.log(username)
-        console.log(password)
+        login(username, password).then((r) => {
+            console.log(r)
+            const cookies = new Cookies()
+            cookies.set('authToken', r.token.token, { path: '/' })
+            isAuthSucceeded(true)
+            toggleOpen()
+        })
     }
 
     return (
@@ -53,14 +61,18 @@ export const LoginDialog = (props) => {
                 label="Имя пользователя"
                 variant="outlined"
                 className={styles.input}
-                onChange={(e)=>{setUsername(e.target.value)}}
+                onChange={(e) => {
+                    setUsername(e.target.value)
+                }}
             />
             <TextField
                 id="password"
                 label="Пароль"
                 variant="outlined"
                 className={styles.input}
-                onChange={(e)=>{setPassword(e.target.value)}}
+                onChange={(e) => {
+                    setPassword(e.target.value)
+                }}
             />
             <Box className={styles.buttonsContainer}>
                 <Button onClick={() => loginUser()}>Войти</Button>

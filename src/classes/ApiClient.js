@@ -13,14 +13,10 @@ const ApiClient = {
     },
 
     post(url, data) {
-        return this.http({
+        return this.http.post(
             url,
-            data,
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
+            data
+            )
     }
 }
 
