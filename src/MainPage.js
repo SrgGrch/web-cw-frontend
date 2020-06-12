@@ -10,8 +10,11 @@ import Button from '@material-ui/core/Button'
 import { LoginDialog } from './presentation/auth/LoginDialog'
 import EventItem from './presentation/events/EventItem'
 import Cookies from 'universal-cookie'
+import { useRouteMatch, Switch } from 'react-router'
+import { Route } from 'react-router-dom'
+import EventDetails from './presentation/events/EventDetails'
 
-const EventList = () => {
+const MainPage = () => {
     const [events, setEvents] = useState()
     const [open, setOpen] = useState(false)
 
@@ -89,6 +92,15 @@ const EventList = () => {
 
         // setButtonName('Профиль')
     }
+
+    let match = useRouteMatch()
+
+    const onEventClicked = (eventId) => {
+        // props.history.push({
+        //     pathname: 'events/' + eventId,
+        // })
+    }
+
     return (
         <div className="App">
             <Box className={styles.pageTitleContainer}>
@@ -110,7 +122,10 @@ const EventList = () => {
                     {events ? (
                         <List className={styles.eventList}>
                             {events.map((event) => (
-                                <EventItem event={event} />
+                                <EventItem
+                                    event={event}
+                                    onEventClicked={onEventClicked}
+                                />
                             ))}
                         </List>
                     ) : (
@@ -129,8 +144,16 @@ const EventList = () => {
                 }}
                 toggleOpen={profileClick}
             />
+
+            {
+                <Switch>
+                    <Route path={`${match.path}/:eventId`}>
+                        <EventDetails />
+                    </Route>
+                </Switch>
+            }
         </div>
     )
 }
 
-export default EventList
+export default MainPage

@@ -1,13 +1,13 @@
 import React from 'react'
 import {withRouter, Route} from 'react-router-dom'
-import EventList from "./EventList";
+import MainPage from "./MainPage";
 
 const _App = () => {
     return (
         <div>
             {/*<Header />*/}
-            <Route exact path="/events" component={EventList}/>
-            <Route exact path="/" component={EventList}/>
+            <Route exact path="/event/" component={MainPage}/>
+            <Route exact path="/" component={MainPage}/>
         </div>
     )
 }

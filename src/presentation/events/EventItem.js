@@ -4,9 +4,12 @@ import Box from '@material-ui/core/Box'
 import Typography from '@material-ui/core/Typography'
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import { Link } from 'react-router-dom'
+import { useRouteMatch } from 'react-router'
 
 const EventItem = (props) => {
     const { event, onEventClicked } = props
+    let match = useRouteMatch()
 
     const useStyles = makeStyles((theme) => ({
         listItem: {
@@ -41,65 +44,73 @@ const EventItem = (props) => {
     const styles = useStyles()
 
     return (
-        <ListItem alignItems="flex-start" className={styles.listItem}>
-            <Card className={styles.card}>
-                <Box className={styles.titleContainer}>
-                    <Typography
-                        className={styles.title}
-                        gutterBottom
-                        variant="h5"
-                        component="h2"
-                    >
-                        {event.name}
-                    </Typography>
-                    <Typography
-                        variant="body2"
-                        color="textSecondary"
-                        component="p"
-                    >
-                        {event.date}
-                    </Typography>
-                </Box>
-                <Box mt={2}>
-                    <Typography
-                        variant="body1"
-                        color="textSecondary"
-                        component="p"
-                    >
-                        {event.description}
-                    </Typography>
-                    <Box mt={2} className={styles.detailsContainer}>
+        <ListItem
+            alignItems="flex-start"
+            className={styles.listItem}
+            onClick={() => {
+                onEventClicked(event.id)
+            }}
+        >
+            <Link to={`${match.url}/${event.id}`}>
+                <Card className={styles.card}>
+                    <Box className={styles.titleContainer}>
                         <Typography
-                            variant="body2"
-                            color="textSecondary"
-                            component="p"
+                            className={styles.title}
+                            gutterBottom
+                            variant="h5"
+                            component="h2"
                         >
-                            {event.place.name}
+                            {event.name}
                         </Typography>
                         <Typography
                             variant="body2"
                             color="textSecondary"
                             component="p"
                         >
-                            {event.organizer.name}
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            color="textSecondary"
-                            component="p"
-                        >
-                            {event.event_type}
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            color="textSecondary"
-                            component="p"
-                        >
-                            {event.guests.length}
+                            {event.date}
                         </Typography>
                     </Box>
-                </Box>
-            </Card>
+                    <Box mt={2}>
+                        <Typography
+                            variant="body1"
+                            color="textSecondary"
+                            component="p"
+                        >
+                            {event.description}
+                        </Typography>
+                        <Box mt={2} className={styles.detailsContainer}>
+                            <Typography
+                                variant="body2"
+                                color="textSecondary"
+                                component="p"
+                            >
+                                {event.place.name}
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                color="textSecondary"
+                                component="p"
+                            >
+                                {event.organizer.name}
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                color="textSecondary"
+                                component="p"
+                            >
+                                {event.event_type}
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                color="textSecondary"
+                                component="p"
+                            >
+                                {event.guests.length}
+                            </Typography>
+                        </Box>
+                    </Box>
+                </Card>
+            </Link>
         </ListItem>
     )
 }
