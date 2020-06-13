@@ -11,12 +11,13 @@ import { LoginDialog } from './presentation/auth/LoginDialog'
 import EventItem from './presentation/events/EventItem'
 import Cookies from 'universal-cookie'
 import { useRouteMatch, Switch } from 'react-router'
-import { Route } from 'react-router-dom'
+import { Link, Route } from 'react-router-dom'
 import EventDetails from './presentation/events/EventDetails'
 
 const MainPage = () => {
     const [events, setEvents] = useState()
     const [open, setOpen] = useState(false)
+    const [isAuth, setIsAuth] = useState(false)
 
     useEffect(() => {
         getEvents().then((res) => {
@@ -80,26 +81,20 @@ const MainPage = () => {
 
     const styles = useStyles()
     const toggleOpen = () => setOpen((prevState) => !prevState)
-    let profileClick = toggleOpen
-    const openProfile = () => {}
-
-    const [buttonName, setButtonName] = useState('Войти')
-
-    const cookies = new Cookies()
-    if (cookies.get('authToken') !== undefined) {
-        profileClick = openProfile
-        //todo set buttonName
-
-        // setButtonName('Профиль')
+    const onProfileClicked = () => {
+        if (isAuth) {
+            // todo open profile
+        } else {
+            toggleOpen()
+        }
     }
 
-    let match = useRouteMatch()
-
-    const onEventClicked = (eventId) => {
-        // props.history.push({
-        //     pathname: 'events/' + eventId,
-        // })
-    }
+    useEffect(() => {
+        const cookies = new Cookies()
+        if (cookies.get('authToken') !== undefined) {
+            setIsAuth(true)
+        }
+    }, [])
 
     return (
         <div className="App">
@@ -110,22 +105,39 @@ const MainPage = () => {
             </Box>
             <Box className={styles.mainScreen}>
                 <Box className={styles.menu}>
-                    <Button>Лента</Button>
+                    <Link to={`/`} style={{ textDecoration: 'none' }}>
+                        <Button>Лента</Button>
+                    </Link>
                     <Button>Мероприятия</Button>
                     <Button>Горячее</Button>
-                    <Button variant="outlined" onClick={() => toggleOpen()}>
+                    <Button
+                        variant="outlined"
+                        onClick={() => onProfileClicked()}
+                    >
                         {' '}
-                        {buttonName}{' '}
+                        {isAuth ? <div>Профиль</div> : <div>Войти</div>}{' '}
                     </Button>
+                    {isAuth ? (
+                        <Button
+                            variant="outlined"
+                            onClick={() => {
+                                const cookies = new Cookies()
+                                cookies.remove('authToken')
+                                setIsAuth(false)
+                            }}
+                        >
+                            {' '}
+                            Выйти
+                        </Button>
+                    ) : (
+                        <div />
+                    )}
                 </Box>
                 <Box>
                     {events ? (
                         <List className={styles.eventList}>
                             {events.map((event) => (
-                                <EventItem
-                                    event={event}
-                                    onEventClicked={onEventClicked}
-                                />
+                                <EventItem event={event} />
                             ))}
                         </List>
                     ) : (
@@ -138,16 +150,14 @@ const MainPage = () => {
             <LoginDialog
                 open={open}
                 isAuthSucceeded={(isSucceeded) => {
-                    if (isSucceeded) {
-                        setButtonName('Профиль')
-                    }
+                    setIsAuth(isSucceeded)
                 }}
-                toggleOpen={profileClick}
+                toggleOpen={toggleOpen}
             />
 
             {
                 <Switch>
-                    <Route path={`${match.path}/:eventId`}>
+                    <Route path={`/:eventId`}>
                         <EventDetails />
                     </Route>
                 </Switch>

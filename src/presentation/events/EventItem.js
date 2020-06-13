@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom'
 import { useRouteMatch } from 'react-router'
 
 const EventItem = (props) => {
-    const { event, onEventClicked } = props
+    const { event } = props
     let match = useRouteMatch()
 
     const useStyles = makeStyles((theme) => ({
@@ -47,11 +47,8 @@ const EventItem = (props) => {
         <ListItem
             alignItems="flex-start"
             className={styles.listItem}
-            onClick={() => {
-                onEventClicked(event.id)
-            }}
         >
-            <Link to={`${match.url}/${event.id}`}>
+            <Link to={`/${event.id}`} style={{textDecoration: 'none' }}>
                 <Card className={styles.card}>
                     <Box className={styles.titleContainer}>
                         <Typography
