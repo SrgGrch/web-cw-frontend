@@ -1,22 +1,24 @@
 import React, { useEffect, useState } from 'react'
-import './App.css'
+import '../App.css'
 import List from '@material-ui/core/List'
 import { makeStyles } from '@material-ui/core/styles'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
-import { getEvents } from './classes/MockRestApi'
 import Button from '@material-ui/core/Button'
-import { LoginDialog } from './presentation/auth/LoginDialog'
-import EventItem from './presentation/events/EventItem'
+import { LoginDialog } from './auth/LoginDialog'
+import EventItem from './events/EventItem'
 import Cookies from 'universal-cookie'
-import { useRouteMatch, Switch } from 'react-router'
+import { Switch } from 'react-router'
 import { Link, Route } from 'react-router-dom'
-import EventDetails from './presentation/events/EventDetails'
+import EventDetails from './events/EventDetails'
+import { RegistrationDialog } from './auth/RegistrationDialog'
+import {getEvents} from "../api/RestApi";
 
 const MainPage = () => {
     const [events, setEvents] = useState()
-    const [open, setOpen] = useState(false)
+    const [loginOpen, setLoginOpen] = useState(false)
+    const [regOpen, setRegOpen] = useState(false)
     const [isAuth, setIsAuth] = useState(false)
 
     useEffect(() => {
@@ -80,12 +82,13 @@ const MainPage = () => {
     }))
 
     const styles = useStyles()
-    const toggleOpen = () => setOpen((prevState) => !prevState)
+    const toggleLoginOpen = () => setLoginOpen((prevState) => !prevState)
+    const toggleRegOpen = () => setRegOpen((prevState) => !prevState)
     const onProfileClicked = () => {
         if (isAuth) {
             // todo open profile
         } else {
-            toggleOpen()
+            toggleLoginOpen()
         }
     }
 
@@ -148,11 +151,26 @@ const MainPage = () => {
                 </Box>
             </Box>
             <LoginDialog
-                open={open}
+                open={loginOpen}
                 isAuthSucceeded={(isSucceeded) => {
                     setIsAuth(isSucceeded)
                 }}
-                toggleOpen={toggleOpen}
+                toggleOpen={toggleLoginOpen}
+                onRegistrationClicked={() => {
+                    toggleLoginOpen()
+                    toggleRegOpen()
+                }}
+            />
+            <RegistrationDialog
+                open={regOpen}
+                isAuthSucceeded={(isSucceeded) => {
+                    setIsAuth(isSucceeded)
+                }}
+                toggleOpen={toggleRegOpen}
+                onLoginClicked={() => {
+                    toggleRegOpen()
+                    toggleLoginOpen()
+                }}
             />
 
             {

@@ -3,7 +3,7 @@ import Cookies from "universal-cookie";
 
 const ApiClient = {
     http: axios.create({
-        baseURL: 'http://127.0.0.1:1984/',
+        baseURL: 'https://bluredu-backend.herokuapp.com/',
     }),
 
     get(url, isAuthRequired = false) {

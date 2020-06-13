@@ -6,11 +6,11 @@ import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import Box from '@material-ui/core/Box'
-import { login } from '../../classes/RestApi'
+import { login } from '../../api/RestApi'
 import Cookies from 'universal-cookie'
 
 export const LoginDialog = (props) => {
-    const { onClose, isAuthSucceeded, open, toggleOpen } = props
+    const { onClose, isAuthSucceeded, open, toggleOpen, onRegistrationClicked } = props
 
     const [password, setPassword] = useState('')
     const [username, setUsername] = useState('')
@@ -66,6 +66,8 @@ export const LoginDialog = (props) => {
                 }}
             />
             <TextField
+                type="password"
+                autoComplete="current-password"
                 id="password"
                 label="Пароль"
                 variant="outlined"
@@ -76,7 +78,7 @@ export const LoginDialog = (props) => {
             />
             <Box className={styles.buttonsContainer}>
                 <Button onClick={() => loginUser()}>Войти</Button>
-                <Button>Регистрация</Button>
+                <Button onClick={onRegistrationClicked}>Регистрация</Button>
             </Box>
         </Dialog>
     )

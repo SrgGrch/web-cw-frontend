@@ -1,6 +1,6 @@
 import React from 'react'
 import {withRouter, Route} from 'react-router-dom'
-import MainPage from "./MainPage";
+import MainPage from "./presentation/MainPage";
 import EventDetails from "./presentation/events/EventDetails";
 
 const _App = () => {
