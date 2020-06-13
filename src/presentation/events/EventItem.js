@@ -45,6 +45,7 @@ const EventItem = (props) => {
 
     return (
         <ListItem
+            key={event.id}
             alignItems="flex-start"
             className={styles.listItem}
         >

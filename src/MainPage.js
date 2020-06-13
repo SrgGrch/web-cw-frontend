@@ -137,7 +137,7 @@ const MainPage = () => {
                     {events ? (
                         <List className={styles.eventList}>
                             {events.map((event) => (
-                                <EventItem event={event} />
+                                <EventItem key={event.id} event={event} />
                             ))}
                         </List>
                     ) : (
